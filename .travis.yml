@@ -1,0 +1,22 @@
+sudo: required
+services:
+    - docker
+
+before_install:
+    - docker build -t devinhenkel/dockercomplexclient -f ./client/Dockerfile.dev ./client
+
+script:
+    - docker run -e CI=true devinhenkel/dockercomplexclient npm test
+
+after_success:
+    - docker build -t devinhenkel/dockercomplexclient ./client
+    - docker build -t devinhenkel/dockercomplexnginx ./nginx
+    - docker build -t devinhenkel/dockercomplexserver ./server
+    - docker build -t devinhenkel/dockercomplexworker ./worker
+    # log in to docker hub
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+    # push to docker hub
+    - docker push devinhenkel/dockercomplexclient
+    - docker push devinhenkel/dockercomplexnginx
+    - docker push devinhenkel/dockercomplexserver
+    - docker push devinhenkel/dockercomplexworker
