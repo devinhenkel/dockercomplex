@@ -14,7 +14,7 @@ after_success:
     - docker build -t devinhenkel/dockercomplexserver ./server
     - docker build -t devinhenkel/dockercomplexworker ./worker
     # log in to docker hub
-    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+    - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD" docker.io
     # push to docker hub
     - docker push devinhenkel/dockercomplexclient
     - docker push devinhenkel/dockercomplexnginx
